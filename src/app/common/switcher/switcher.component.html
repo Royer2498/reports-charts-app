@@ -1,0 +1,36 @@
+<mat-button-toggle-group
+    [name]="name"
+    (change)="changeOption($event)"
+    #group="matButtonToggleGroup">
+    
+    <mat-button-toggle
+        *ngIf="!isTableSwitcher"
+        [value]="barValue" 
+        aria-label="Text align left">
+        <mat-icon>leaderboard</mat-icon>
+    </mat-button-toggle>
+    
+    <mat-button-toggle
+        *ngIf="!isTableSwitcher"
+        [value]="pieValue"
+        aria-label="Text align center">
+        <mat-icon>pie_chart_outline</mat-icon>
+    </mat-button-toggle>
+
+    <mat-button-toggle
+        class="table"
+        *ngIf="isTableSwitcher"
+        [value]="percentageValue"
+        aria-label="Text align center">
+        Porcentaje
+    </mat-button-toggle>
+
+    <mat-button-toggle
+        *ngIf="isTableSwitcher"
+        class="table"
+        [value]="totalValue"
+        aria-label="Text align center">
+        Totales
+    </mat-button-toggle>
+
+</mat-button-toggle-group>

@@ -1,0 +1,13 @@
+<mat-card class="card">
+    <mat-card-header *ngIf="headerTitle"  class="header">
+        <mat-card-title class="title text">{{headerTitle}}</mat-card-title>
+        <div class="content">
+            <ng-content  select="[header]"></ng-content>
+        </div>
+    </mat-card-header>
+    <mat-card-content
+        class="body-content"
+        [class.height-complete] = "!headerTitle">
+        <ng-content select="[body]"></ng-content>
+    </mat-card-content>
+</mat-card>

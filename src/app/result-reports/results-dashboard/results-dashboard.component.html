@@ -1,0 +1,156 @@
+<div class="charts-container">
+    
+    <div
+        *ngIf="isLoading"
+        class="spinner-container">
+        <div>
+            <mat-spinner></mat-spinner>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading" class="row height-complete principal">
+
+        <div class="column width-one-quarter table">
+            
+            <div class="row width-complete height-one-fifth">
+                <div class="column width-middle">
+                    <app-card>
+                        <div body class="content">
+                            <div class="progress">
+                                <div class="percent">
+                                    {{ (!alcaldeProgress && alcaldeProgress !== 0) ? '' : alcaldeProgress + '%' }}
+                                </div>
+                                <div class="label">
+                                    Actas computadas Alcalde
+                                </div>
+                            </div>
+                        </div>
+                    </app-card>
+                </div>
+                <div class="column width-middle">
+                    <app-card>
+                        <div body class="content">
+                            <div class="progress">
+                                <div class="percent">
+                                    {{ (!concejalesProgress && concejalesProgress !== 0) ? '' : concejalesProgress + '%' }}
+                                </div>
+                                <div class="label">
+                                    Actas computadas Concejales
+                                </div>
+                            </div>
+                        </div>
+                    </app-card>
+                </div>
+            </div>
+            
+            <div class="column width-complete height-four-fifth table">
+                <app-card [headerTitle]="'Resultados'">
+                    <div header>
+                        <app-switcher
+                            [name]="'results'"
+                            [isTableSwitcher]="true"
+                            (change)="changeChart($event)">
+                        </app-switcher>
+                    </div>
+                    <div body class="content">
+                        <app-table
+                            *ngIf="statusMap.get('results') === percentageValue"
+                            [data]="tablePercentageData"
+                            [tableAlcaldeSpecialData]="alcaldeSpecialPercentage"
+                            [tableConcejalesSpecialData]="concejalesSpecialPercentage">
+                        </app-table>
+                        <app-table
+                            *ngIf="statusMap.get('results') === totalValue"
+                            [data]="tableCountData"
+                            [tableAlcaldeSpecialData]="alcaldeSpecialCount"
+                            [tableConcejalesSpecialData]="concejalesSpecialCount">
+                        </app-table>
+                    </div>
+                </app-card>
+            </div>
+        </div>
+
+        <div
+            *ngIf="!isGeneralReport"
+            [ngClass]="{'height-complete': !isSmallDevice, 'concejales-container': isSmallDevice}"
+            class="column width-four-fifth height-complete">
+            
+            <app-card [headerTitle]="'Asignación de concejales por partido'">
+                <div body class="concejales-count">
+                    <div class="concejal-item" *ngFor="let count of concejalesCounter; let i = index">
+                        <div class="concejal-card">
+                            <div class="label">
+                                {{ count.partido + ' ('+ count.value + ')' }}
+                            </div>
+                            <div class="icons">
+                                <mat-icon
+                                    class="icon" 
+                                    [ngClass] = "count.partido.toLowerCase()"
+                                    *ngFor="let index of Arr(count.value).fill(1); let i = index">
+                                    fiber_manual_record
+                                </mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </app-card>
+
+        </div>
+
+        <div class="column width-four-fifth" *ngIf="isGeneralReport">
+
+            <div class="row height-middle big-card">
+                
+                <div #data1 class="column width-complete">
+                    <app-card [headerTitle]="'Resultados para alcalde'">
+                        <div header>
+                            <app-switcher
+                                [name]="'alcalde'"
+                                [isTableSwitcher]="false"
+                                (change)="changeChart($event)">
+                            </app-switcher>
+                        </div>
+                        <div body class="content" (window:resize)="onResize($event)">
+                            <app-apex-bar
+                                *ngIf="statusMap.get('alcalde') === barValue"
+                                [data] = "alcaldeResultsPercentage"
+                                [height]="!isSmallDevice ? data1?.offsetHeight - 105 : data1?.offsetHeight - 120">
+                            </app-apex-bar>
+                            <app-apex-pie
+                                *ngIf="statusMap.get('alcalde') === pieValue"
+                                [data] = "alcaldeResultsCount"
+                                [height]="!isSmallDevice ? data1?.offsetHeight - 105 : data1?.offsetHeight - 120">
+                            </app-apex-pie>
+                        </div>
+                    </app-card>
+                </div>
+            </div>
+
+            <div class="row height-middle big-card">
+                <div #data3 class="column width-complete">
+                    <app-card [headerTitle]="'Resultados para concejales'">
+                        <div header>
+                            <app-switcher
+                                [name]="'gobernador'"
+                                [isTableSwitcher]="false"
+                                (change)="changeChart($event)">
+                            </app-switcher>
+                        </div>
+                        <div body class="content" (window:resize)="onResize($event)">
+                            <app-apex-bar
+                                *ngIf="statusMap.get('gobernador') === barValue"
+                                [data] = "concejalesResultsPercentage"
+                                [height]="!isSmallDevice ? data3?.offsetHeight - 105 : data3?.offsetHeight - 120">
+                            </app-apex-bar>
+                            <app-apex-pie
+                                *ngIf="statusMap.get('gobernador') === pieValue"
+                                [data] = "concejalesResultsCount"
+                                [height]="!isSmallDevice ? data3?.offsetHeight - 105 : data3?.offsetHeight - 120">
+                            </app-apex-pie>
+                        </div>
+                    </app-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+:host {
+    .table-container {
+        overflow-y: auto;
+    }
+
+    .mat-elevation-z8 {
+        max-height: 100%;
+        overflow-y: auto;
+        box-shadow: none;
+
+        table {
+            width: 100%;
+            height: 100%;
+        }
+
+        .mat-header-cell, .mat-cell {
+            width: 20%;
+            &.initials{
+                width: 40%;
+            }
+        }
+    }
+}

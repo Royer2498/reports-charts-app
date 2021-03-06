@@ -1,0 +1,14 @@
+
+ ::ng-deep ngx-charts-pie-chart {
+    ngx-charts-chart {
+
+        ngx-charts-legend {
+            ul {
+                @media screen and (max-width: 600px) {
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+            }
+        }
+    }
+}

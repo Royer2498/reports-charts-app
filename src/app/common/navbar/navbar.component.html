@@ -1,0 +1,22 @@
+<mat-toolbar>
+    <div class="navbar">
+        <div class="brand">
+            <button
+                mat-icon-button class="example-icon"
+                aria-label="Example icon-button with menu icon"
+                fxShow="true"
+                fxHide.gt-sm="true"
+                (click)="toggleSidenav($event)">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <div class="image">
+                <img src="../assets/images/Logo.jpg" height="45">
+            </div>
+        </div>
+
+        <div class="actions" fxShow="true" fxHide.lt-md="true">
+            <button class ="button" mat-button  (click) = "clickGeneral($event)">Resultados Generales</button>
+            <button class="button right" mat-button  (click) = "clickConcejales($event)">Conteo de Concejales</button>
+        </div>
+    </div>
+</mat-toolbar>

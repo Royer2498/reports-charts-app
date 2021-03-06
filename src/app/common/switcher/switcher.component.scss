@@ -1,0 +1,13 @@
+mat-button-toggle-group {
+    margin-right: 5px;
+
+    &::ng-deep mat-button-toggle {
+        &.table {
+            button {
+                span {
+                    line-height: 35px;
+                }
+            }
+        }
+    }
+}
