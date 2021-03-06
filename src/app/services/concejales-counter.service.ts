@@ -6,6 +6,7 @@ import { first } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ConcejalesCounterService {
+  // Numero de escanios es 11
   private escanios = 11;
   public mapPrueba = new Map();
   public mapPercetanges  = new Map();
