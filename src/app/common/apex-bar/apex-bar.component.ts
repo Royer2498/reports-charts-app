@@ -30,7 +30,7 @@ export class ApexBarComponent implements OnInit {
     this.chartOptions = {
       series: [
         {
-          name: "My-series",
+          name: "Porcentaje",
           data: this.data,
         }
       ],
@@ -79,6 +79,9 @@ export class ApexBarComponent implements OnInit {
       ],
       xaxis: {
         categories: this.partidos
+      },
+      legend: {
+        show: false
       }
     };
   }

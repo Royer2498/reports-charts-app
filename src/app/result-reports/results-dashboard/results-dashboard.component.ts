@@ -18,7 +18,7 @@ export class ResultsDashboardComponent implements OnInit, OnDestroy {
   Arr = Array;
   private unsubscribe: Subject<void> = new Subject();
   private subscription: Subscription;
-  private timeInterval = interval(10000);
+  private timeInterval = interval(120000); // 2 minutos
 
   public statusMap: Map<string, string> = new Map();
   public barValue = ChartType.BAR;
@@ -61,6 +61,7 @@ export class ResultsDashboardComponent implements OnInit, OnDestroy {
 
   public isGeneralReport = true;
   public isLoading = false;
+  public isEmpty = false;
 
   constructor(
     private resultsService: ResultsService,
@@ -81,9 +82,16 @@ export class ResultsDashboardComponent implements OnInit, OnDestroy {
     }
 
     this.subscription = this.timeInterval.subscribe(async val => {
-      console.log("Haciendo request de nuevo")
-      // await this.resultsService.getConcejalesResults();
-      // await this.resultsService.getAlcaldeResults();
+      this.isLoading = true;
+      await this.resultsService.getConcejalesResults();
+      await this.resultsService.getAlcaldeResults();
+      let isAlcaldeVotesEmpty = this.isAlcaldeDataEmpty(this.alcaldeResults);
+      let isConcejalesVotesEmpty = this.isConcejalesDataEmpty(this.concejalesResults);
+      this.tableCountData = this.resultsService.getResultsForTable(
+        this.alcaldeResultsCount, this.concejalesResultsCount, isAlcaldeVotesEmpty, isConcejalesVotesEmpty);
+      this.tablePercentageData = this.resultsService.getResultsForTable(
+        this.alcaldeResultsPercentage, this.concejalesResultsPercentage, isAlcaldeVotesEmpty, isConcejalesVotesEmpty);
+      this.isLoading = false;
     });
 
     this.dashboardHandlerService.isGeneralDashboard$.pipe(takeUntil(this.unsubscribe)).subscribe(option => {
@@ -100,30 +108,78 @@ export class ResultsDashboardComponent implements OnInit, OnDestroy {
     this.resultsService.alcaldeResults$.pipe(takeUntil(this.unsubscribe)).subscribe(data => {
       if (data) {
         this.alcaldeResults = data;
-        this.alcaldeResultsCount = this.resultsService.getAlcaldeVotes(data);
-        this.alcaldeResultsPercentage = this.resultsService.getAlcaldePercentages(data);
-        this.alcaldeSpecialCount = this.resultsService.getAlcaldeSpecialVotesCount(data);
-        this.alcaldeSpecialPercentage = this.resultsService.getAlcaldeSpecialVotesPercentages(data);
-        this.alcaldeProgress = Math.floor(this.resultsService.getPercentageProgress(this.alcaldeResults));
+        if (!this.isAlcaldeDataEmpty(this.alcaldeResults)) {
+          this.alcaldeResultsCount = this.resultsService.getAlcaldeVotes(data);
+          this.alcaldeResultsPercentage = this.resultsService.getAlcaldePercentages(data);
+          this.alcaldeSpecialCount = this.resultsService.getAlcaldeSpecialVotesCount(data);
+          this.alcaldeSpecialPercentage = this.resultsService.getAlcaldeSpecialVotesPercentages(data);
+          this.alcaldeProgress = Math.floor(this.resultsService.getPercentageProgress(this.alcaldeResults));
+          this.alcaldeProgress = this.alcaldeProgress.toFixed(2);
+        } else {
+          this.setAllAlcaldeAsEmpty();
+        }
       }
     });
 
     this.resultsService.concejalesResults$.pipe(takeUntil(this.unsubscribe)).subscribe(data => {
       if (data) {
         this.concejalesResults = data;
-        this.concejalesResultsCount = this.resultsService.getConcejalesVotes(this.concejalesResults);
-        this.concejalesResultsPercentage = this.resultsService.getConcejalPercentages(this.concejalesResults);
-        this.concejalesSpecialCount = this.resultsService.getConcejalesSpecialVotesCount(this.concejalesResults);
-        this.concejalesSpecialPercentage = this.resultsService.getConcejalesSpecialVotesPercentage(this.concejalesResults);
-        this.concejalesProgress = Math.floor(this.resultsService.getPercentageProgress(this.concejalesResults));
+        if (!this.isConcejalesDataEmpty(this.concejalesResults)) {
+          this.concejalesResultsCount = this.resultsService.getConcejalesVotes(this.concejalesResults);
+          this.concejalesResultsPercentage = this.resultsService.getConcejalPercentages(this.concejalesResults);
+          this.concejalesSpecialCount = this.resultsService.getConcejalesSpecialVotesCount(this.concejalesResults);
+          this.concejalesSpecialPercentage = this.resultsService.getConcejalesSpecialVotesPercentage(this.concejalesResults);
+          this.concejalesProgress = Math.floor(this.resultsService.getPercentageProgress(this.concejalesResults));
+          this.concejalesProgress = this.concejalesProgress.toFixed(2);
+        } else {
+          this.setAllConcejalesAsEmpty();
+        }
       }
     });
 
     await this.resultsService.getConcejalesResults();
     await this.resultsService.getAlcaldeResults();
     this.isLoading = false;
-    this.tableCountData = this.resultsService.getResultsForTable(this.alcaldeResultsCount, this.concejalesResultsCount);
-    this.tablePercentageData = this.resultsService.getResultsForTable(this.alcaldeResultsPercentage, this.concejalesResultsPercentage);
+    let isAlcaldeVotesEmpty = this.isAlcaldeDataEmpty(this.alcaldeResults);
+    let isConcejalesVotesEmpty = this.isConcejalesDataEmpty(this.concejalesResults);
+    this.tableCountData = this.resultsService.getResultsForTable(
+      this.alcaldeResultsCount, this.concejalesResultsCount, isAlcaldeVotesEmpty, isConcejalesVotesEmpty);
+    this.tablePercentageData = this.resultsService.getResultsForTable(
+      this.alcaldeResultsPercentage, this.concejalesResultsPercentage, isAlcaldeVotesEmpty, isConcejalesVotesEmpty);
+  }
+
+  public isAlcaldeDataEmpty(results) {
+    const percents = results.porcentaje;
+    const alcaldeVotes = results.votosAlcalde;
+    return this.isObjectEmpty(percents) || alcaldeVotes.length === 0 || results.cantidadMesas === 0; 
+  }
+
+  public isConcejalesDataEmpty(results) {
+    const percents = results.porcentaje;
+    const concejalesVotes = results.votosConcejal;
+    return this.isObjectEmpty(percents) || concejalesVotes.length === 0 || results.cantidadMesas === 0; 
+  }
+
+  public setAllAlcaldeAsEmpty() {
+    this.isEmpty = true;
+    this.alcaldeResultsCount = this.resultsService.getEmptyAlcaldeResults();
+    this.alcaldeResultsPercentage = this.resultsService.getEmptyAlcaldeResults();
+    this.alcaldeSpecialCount = this.resultsService.getEmptySpecialAlcaldeResults();
+    this.alcaldeSpecialPercentage = this.resultsService.getEmptySpecialAlcaldeResults();
+    this.alcaldeProgress = 0;
+  }
+
+  public setAllConcejalesAsEmpty() {
+    this.isEmpty = true;
+    this.concejalesResultsCount = this.resultsService.getEmptyConcejalesResults();
+    this.concejalesResultsPercentage = this.resultsService.getEmptyConcejalesResults();
+    this.concejalesSpecialCount = this.resultsService.getEmptySpecialConcejalesResults();
+    this.concejalesSpecialPercentage = this.resultsService.getEmptySpecialConcejalesResults();
+    this.concejalesProgress = 0;
+  }
+
+  public isObjectEmpty(object) {
+    return Object.keys(object).length === 0;
   }
 
   @HostListener('window:resize', ['$event'])

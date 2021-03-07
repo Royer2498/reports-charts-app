@@ -107,13 +107,12 @@
                     height: 48px;
                     display: flex;
                     flex-direction: row;
-                    border: 2px solid grey;
+                    border: 2px solid #D7D7D7;
                     border-radius: 4px;
 
                     .label {
                         display: flex;
                         align-items: center;
-                        // flex: 1;
                         width: 80px;
                         padding-left: 12px;
                     }

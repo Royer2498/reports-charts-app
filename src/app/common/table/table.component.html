@@ -76,9 +76,9 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-        <tr mat-footer-row *matFooterRowDef="['VotosValidos', 'validosAlcalde', 'validosConcejales']" class="example-first-footer-row"></tr>
-        <tr mat-footer-row *matFooterRowDef="['VotosNulos', 'nulosAlcalde', 'nulosConcejales']" class="example-first-footer-row"></tr>   
-        <tr mat-footer-row *matFooterRowDef="['VotosBlanco', 'blancoAlcalde', 'blancoConcejales']" class="example-first-footer-row"></tr>        
+        <tr class="special-footer" mat-footer-row *matFooterRowDef="['VotosValidos', 'validosAlcalde', 'validosConcejales']" class="example-first-footer-row"></tr>
+        <tr class="special-footer" mat-footer-row *matFooterRowDef="['VotosNulos', 'nulosAlcalde', 'nulosConcejales']" class="example-first-footer-row"></tr>   
+        <tr class="special-footer" mat-footer-row *matFooterRowDef="['VotosBlanco', 'blancoAlcalde', 'blancoConcejales']" class="example-first-footer-row"></tr>        
 
     </table>
 </div>

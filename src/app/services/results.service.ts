@@ -145,18 +145,54 @@ export class ResultsService {
     return (tablesCount / this.totalActs) * 100;
   }
 
-  public getResultsForTable(alcaldeResultMap: any, concejalesResultMap) {
+  public getResultsForTable(alcaldeResultMap: any, concejalesResultMap, isAlcaldeVotesEmpty, isConcejalesVotesEmpty) {
     const partiesLabels = this.politicalPartiesMapperService.getPoliticalPartiesList();
-    const alcaldeResult = Array.from(alcaldeResultMap, ([partido, value]) => ({ partido, value }));
-    const concejalResult = Array.from(concejalesResultMap, ([partido, value]) => ({ partido, value }));
+    const alcaldeResult = !isAlcaldeVotesEmpty ?
+      Array.from(alcaldeResultMap, ([partido, value]) => ({ partido, value })) :
+      Array(9).fill(1);
+    const concejalResult = !isConcejalesVotesEmpty ?
+      Array.from(concejalesResultMap, ([partido, value]) => ({ partido, value })) :
+      Array(9).fill(1);
 
     return alcaldeResult.map((result, index) => {
       return {
         initials: this.capitalizeFirstLetter(partiesLabels[index]),
-        alcalde: result.value,
-        concejales: concejalResult[index].value
+        alcalde: !isAlcaldeVotesEmpty ? result.value : 0,
+        concejales: !isConcejalesVotesEmpty ? concejalResult[index].value : 0
       }
     });
+  }
+
+  public getEmptyAlcaldeResults() {
+    let clonedMap = new Map(this.politicalPartiesMapperService.getAlcaldeMap());
+    clonedMap.forEach((value, key) => {
+      clonedMap.set(key, 0);
+    });
+    return clonedMap;
+  }
+
+  public getEmptyConcejalesResults() {
+    let clonedMap = new Map(this.politicalPartiesMapperService.getConcejalMap());
+    clonedMap.forEach((value, key) => {
+      clonedMap.set(key, 0);
+    });
+    return clonedMap;
+  }
+
+  public getEmptySpecialAlcaldeResults() {
+    let clonedMap = new Map();
+    clonedMap.set('a_validos', 0);
+    clonedMap.set('a_nulos', 0);
+    clonedMap.set('a_blancos', 0);
+    return clonedMap;
+  }
+
+  public getEmptySpecialConcejalesResults() {
+    let clonedMap = new Map();
+    clonedMap.set('c_validos', 0);
+    clonedMap.set('c_nulos', 0);
+    clonedMap.set('c_blancos', 0);
+    return clonedMap;
   }
 
   public capitalizeFirstLetter(word: any) {
