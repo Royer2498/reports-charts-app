@@ -11,6 +11,10 @@
         table {
             width: 100%;
             height: 100%;
+
+            .last-column {
+                padding-right: 0px;
+            }
         }
 
         .mat-header-cell, .mat-cell {
@@ -20,6 +24,8 @@
             }
         }
     }
+
+
 
     .special-footer {
         background-color: #d7d7d7;
