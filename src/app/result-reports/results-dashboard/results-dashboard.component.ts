@@ -18,6 +18,7 @@ export class ResultsDashboardComponent implements OnInit, OnDestroy {
   Arr = Array;
   private unsubscribe: Subject<void> = new Subject();
   private subscription: Subscription;
+  //private timeInterval = interval(120000); // 2 minutos
   private timeInterval = interval(120000); // 2 minutos
 
   public statusMap: Map<string, string> = new Map();
@@ -92,6 +93,9 @@ export class ResultsDashboardComponent implements OnInit, OnDestroy {
       this.tablePercentageData = this.resultsService.getResultsForTable(
         this.alcaldeResultsPercentage, this.concejalesResultsPercentage, isAlcaldeVotesEmpty, isConcejalesVotesEmpty);
       this.isLoading = false;
+      if (!this.isGeneralReport && this.concejalesResultsCount && this.concejalesResultsPercentage) {
+       this.dashboardHandlerService.refreshDashboard();
+      }
     });
 
     this.dashboardHandlerService.isGeneralDashboard$.pipe(takeUntil(this.unsubscribe)).subscribe(option => {

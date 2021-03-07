@@ -38,9 +38,11 @@ export class ConcejalesCounterService {
 
   public calculateNumber(resultsCounts, resultsPercentage) {
     let matrix = this.generateMatrix(resultsCounts, resultsPercentage);
+
     // Pruebas solo
     // let matrix = this.generateMatrix(this.mapPrueba, this.mapPercetanges);
     matrix = matrix.flat().sort(this.compare);
+
     let firstEleven = matrix.slice(0, this.escanios);
     let mapResponse = this.generateMapResult(firstEleven);
     this.addLosers(mapResponse);

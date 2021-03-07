@@ -22,4 +22,8 @@ export class DashboardHandlerService {
     this.isGeneralDashboard = false;
     this.isGeneralDashboard$.next(this.isGeneralDashboard);
   }
+
+  public refreshDashboard() {
+    this.isGeneralDashboard$.next(this.isGeneralDashboard);
+  }
 }
