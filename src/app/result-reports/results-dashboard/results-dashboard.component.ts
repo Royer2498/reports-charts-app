@@ -117,7 +117,7 @@ export class ResultsDashboardComponent implements OnInit, OnDestroy {
           this.alcaldeResultsPercentage = this.resultsService.getAlcaldePercentages(data);
           this.alcaldeSpecialCount = this.resultsService.getAlcaldeSpecialVotesCount(data);
           this.alcaldeSpecialPercentage = this.resultsService.getAlcaldeSpecialVotesPercentages(data);
-          this.alcaldeProgress = Math.floor(this.resultsService.getPercentageProgress(this.alcaldeResults));
+          this.alcaldeProgress = this.resultsService.getPercentageProgress(this.alcaldeResults);
           this.alcaldeProgress = this.alcaldeProgress.toFixed(2);
         } else {
           this.setAllAlcaldeAsEmpty();
@@ -133,7 +133,7 @@ export class ResultsDashboardComponent implements OnInit, OnDestroy {
           this.concejalesResultsPercentage = this.resultsService.getConcejalPercentages(this.concejalesResults);
           this.concejalesSpecialCount = this.resultsService.getConcejalesSpecialVotesCount(this.concejalesResults);
           this.concejalesSpecialPercentage = this.resultsService.getConcejalesSpecialVotesPercentage(this.concejalesResults);
-          this.concejalesProgress = Math.floor(this.resultsService.getPercentageProgress(this.concejalesResults));
+          this.concejalesProgress = this.resultsService.getPercentageProgress(this.concejalesResults);
           this.concejalesProgress = this.concejalesProgress.toFixed(2);
         } else {
           this.setAllConcejalesAsEmpty();

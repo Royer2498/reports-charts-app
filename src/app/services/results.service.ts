@@ -142,7 +142,10 @@ export class ResultsService {
 
   public getPercentageProgress(result: any) {
     const tablesCount = this.getTablesCount(result);
-    return (tablesCount / this.totalActs) * 100;
+    //console.log((tablesCount / this.totalActs) * 100)
+    //return (tablesCount / this.totalActs) * 100;
+    let resultAux = (tablesCount / this.totalActs) * 100;
+    return resultAux;
   }
 
   public getResultsForTable(alcaldeResultMap: any, concejalesResultMap, isAlcaldeVotesEmpty, isConcejalesVotesEmpty) {
